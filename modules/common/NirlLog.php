@@ -18,7 +18,7 @@ class NirlLog {
     private static $use_error_log ;
     private static $db ;
     private static $sql ;
-	
+    
     private static $defaultsql = 'INSERT INTO t_log(log_time,log_level,log_type,log_mod,log_desc,log_data) 
                                   VALUES (now(), ?, ?, ?, ?, ?)' ;
         
@@ -38,18 +38,18 @@ class NirlLog {
         self::$save_data = isset($NirlLog_save_data) ? !empty($NirlLog_save_data) : TRUE;
         self::$max_data_length = isset($NirlLog_max_data_length) ? 4096 : $NirlLog_max_data_length;
         self::$use_error_log = isset($NirlLog_use_error_log) ? !empty($NirlLog_use_error_log) : TRUE;
-		
+        
         self::$db = isset($NirlLog_db) ? NULL : $NirlLog_db;
-		self::$sql = isset($NirlLog_sql) ? $defaultsql : $NirlLog_sql;
+        self::$sql = isset($NirlLog_sql) ? $defaultsql : $NirlLog_sql;
     }
     
     private static function save($level, $desc, $mod, $type, $data) {
         
-		// test for th log level
+        // test for th log level
         if ( $level > self::$level )
             return ;
-		
-		// $desc is a required field.
+        
+        // $desc is a required field.
         if ( empty($desc) )
             return ;
         
@@ -109,8 +109,8 @@ class NirlLog {
         }
         
         if ( $stmt->bind_param('iisss', $level, $type, $mod, $desc, $data) === FALSE){
-        		
-        	error_log("NirlLog::save::bind_param failed: $sql\n    [$db->errno] $db->error") ;
+                
+            error_log("NirlLog::save::bind_param failed: $sql\n    [$db->errno] $db->error") ;
             $stmt->close() ;
             $db->close() ;
             return ;

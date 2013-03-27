@@ -61,7 +61,7 @@
     
      'invalidCallUser' => array('seconds'=>600, 'limit'=>120) ,
      'invalidCallIP'   => array('seconds'=>600, 'limit'=>120) ,
-	
+    
      'internalErrorUser' => array('seconds'=>600, 'limit'=>120) ,
      'internalErrorIP'   => array('seconds'=>600, 'limit'=>120)
  ) ;

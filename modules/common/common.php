@@ -16,7 +16,7 @@ include_once dirname(__FILE__) . '/../config.php' ;
  */
 function hex_to_bytes($hexstr) {
 
-	return pack('H*', $hexstr) ;
+    return pack('H*', $hexstr) ;
 }
 
 /**
@@ -24,8 +24,8 @@ function hex_to_bytes($hexstr) {
  */
 function bytes_to_hex($bytes) {
 
-	$m = unpack('H*', $bytes) ;
-	return $m[1];
+    $m = unpack('H*', $bytes) ;
+    return $m[1];
 }
 
 /**
@@ -33,15 +33,15 @@ function bytes_to_hex($bytes) {
  */
 function executed_once($action) {
 
-	if ( empty($action) ) // an empty action name is not allowed,
-		return TRUE ;     // it will be taken as executed.
+    if ( empty($action) ) // an empty action name is not allowed,
+        return TRUE ;     // it will be taken as executed.
 
-	if ( isset($_SERVER[$action]) )
-		return TRUE ; // the status is retained in $_SERVER.
+    if ( isset($_SERVER[$action]) )
+        return TRUE ; // the status is retained in $_SERVER.
 
-	// first time to be executed for the action.
-	$_SERVER[$action] = TRUE ;
-	return FALSE ;
+    // first time to be executed for the action.
+    $_SERVER[$action] = TRUE ;
+    return FALSE ;
 }
 
 /**
@@ -49,11 +49,11 @@ function executed_once($action) {
  */
 function file_mime_content_type($filename) {
 
-	$info = new finfo(FILEINFO_MIME) ;
-	if (is_resource($info) === TRUE)
-		return $info->file($filename, FILEINFO_MIME_TYPE) ;
+    $info = new finfo(FILEINFO_MIME) ;
+    if (is_resource($info) === TRUE)
+        return $info->file($filename, FILEINFO_MIME_TYPE) ;
 
-	return FALSE ;
+    return FALSE ;
 }
 
 /**
@@ -61,11 +61,11 @@ function file_mime_content_type($filename) {
  */
 function safe_file_name($filename) {
 
-	if (strlen($filename) > 64)
-		$filename = substr($filename, -64) ; // reserve the last 64 characters.
+    if (strlen($filename) > 64)
+        $filename = substr($filename, -64) ; // reserve the last 64 characters.
 
-	// replace all unsafe characters to '_'.
-	return preg_replace('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})/', '_', $filename) ;
+    // replace all unsafe characters to '_'.
+    return preg_replace('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})/', '_', $filename) ;
 }
 
 /**
@@ -73,10 +73,10 @@ function safe_file_name($filename) {
  */
 function is_safe_file_name($filename) {
 
-	if (strlen($filename) > 64)
-		return FALSE;
+    if (strlen($filename) > 64)
+        return FALSE;
 
-	return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})', $filename) === FALSE ;
+    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})', $filename) === FALSE ;
 }
 
 /**
@@ -84,60 +84,60 @@ function is_safe_file_name($filename) {
  */
 function is_safe_path_name($filename) {
 
-	if (strlen($filename) > 256)
-		return FALSE ;
+    if (strlen($filename) > 256)
+        return FALSE ;
 
-	return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._/])]|[.]{2})', $filename) === FALSE ;
+    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._/])]|[.]{2})', $filename) === FALSE ;
 }
 
 /**
  * To test whether a string starts with a specific value.
  */
 function str_starts($str, $value) {
-	
-	$length = strlen($value) ;
-	return $length <= strlen($str) && (substr($str, 0, $length) === $value) ;
+    
+    $length = strlen($value) ;
+    return $length <= strlen($str) && (substr($str, 0, $length) === $value) ;
 }
 
 /**
  * To test whether a string ends with a specific value.
  */
 function str_ends($str, $value) {
-	
-	$length = strlen($value) ;
-	return $length <= strlen($str) && (substr($str, -$length) === $value) ;
+    
+    $length = strlen($value) ;
+    return $length <= strlen($str) && (substr($str, -$length) === $value) ;
 }
 
 /**
  * To map a key to a value with a default one.
  */
 function map_to($map, $key, $default=NULL) {
-	
-	if ( empty($map) || empty($key) )
-		return $default ; // both $map and $key must not be empty.
-	
-	if ( isset($map[$key]) )
-		return $map[$key] ;
-	else
-		return $default ;
+    
+    if ( empty($map) || empty($key) )
+        return $default ; // both $map and $key must not be empty.
+    
+    if ( isset($map[$key]) )
+        return $map[$key] ;
+    else
+        return $default ;
 }
 
 /**
  * To map a key to a non-empty value with a default one.
  */
 function map_ne($map, $key, $default) {
-	
-	if ( empty($map) || empty($key) )
-		return $default ; // both $map and $key must not be empty.
-	
-	if ( !isset($map[$key]) )
-		return $default ;
-	
-	$value = $map[$key] ;
-	if ( empty($value) )
-		return $default ;
-	else 
-		return $value ;
+    
+    if ( empty($map) || empty($key) )
+        return $default ; // both $map and $key must not be empty.
+    
+    if ( !isset($map[$key]) )
+        return $default ;
+    
+    $value = $map[$key] ;
+    if ( empty($value) )
+        return $default ;
+    else 
+        return $value ;
 }
 
 /**
@@ -145,27 +145,27 @@ function map_ne($map, $key, $default) {
  */
 function is_private_addr($ipaddr) {
 
-	$addr = inet_pton($ipaddr) ;
-	if ( $addr === FALSE )
-		return FALSE ; // invalid address format.
-	
-	$len = strlen($addr);
-	if ( $len !== 4 && $len !== 16 )
-		return FALSE ; // invalid result for some unknown reasons.
-	
-	$bytes = unpack('C*', $addr) ; // convert string to byte array.
-	if ( $len === 4 ) { // IPv4
-	
-		$a1 = $bytes[1] ; // it's a map not an array, so it starts from 1.
-		$a2 = $bytes[2] ;
-		return ( $a1 === 10 ) ||
-			   ( $a1 === 172 && ($a2 > 15 && $a2 < 32) ) ||
-		       ( $a1 === 192 && $a2 === 168 ) ;
-		
-	} else { // IPv6
-		
-		return ( $bytes[1] === 0xFD ) ; // FC00::/7
-	}
+    $addr = inet_pton($ipaddr) ;
+    if ( $addr === FALSE )
+        return FALSE ; // invalid address format.
+    
+    $len = strlen($addr);
+    if ( $len !== 4 && $len !== 16 )
+        return FALSE ; // invalid result for some unknown reasons.
+    
+    $bytes = unpack('C*', $addr) ; // convert string to byte array.
+    if ( $len === 4 ) { // IPv4
+    
+        $a1 = $bytes[1] ; // it's a map not an array, so it starts from 1.
+        $a2 = $bytes[2] ;
+        return ( $a1 === 10 ) ||
+               ( $a1 === 172 && ($a2 > 15 && $a2 < 32) ) ||
+               ( $a1 === 192 && $a2 === 168 ) ;
+        
+    } else { // IPv6
+        
+        return ( $bytes[1] === 0xFD ) ; // FC00::/7
+    }
 }
 
 /**
@@ -173,36 +173,36 @@ function is_private_addr($ipaddr) {
  */
 function get_remote_addr() {
 
-	// test for cached result
-	if ( isset($_SERVER['_NU_REMOTE_ADDR']) )
-		return $_SERVER['_NU_REMOTE_ADDR'] ;
+    // test for cached result
+    if ( isset($_SERVER['_NU_REMOTE_ADDR']) )
+        return $_SERVER['_NU_REMOTE_ADDR'] ;
 
-	// possible headers containing the client ip address.
-	$keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 
-				  'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 
-				  'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') ;
+    // possible headers containing the client ip address.
+    $keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 
+                  'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 
+                  'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') ;
 
-	foreach ($keys as $key) {
+    foreach ($keys as $key) {
 
-		if ( !isset($_SERVER[$key]) )
-			continue ;
+        if ( !isset($_SERVER[$key]) )
+            continue ;
 
-		// it may have multiple values seperated by ','.
-		foreach (explode(',', $_SERVER[$key]) as $ip) {
+        // it may have multiple values seperated by ','.
+        foreach (explode(',', $_SERVER[$key]) as $ip) {
 
-			if ( filter_var($ip, FILTER_VALIDATE_IP) // a valid IP address string,  
-			     && !is_private_addr($ip) ) {        // and not a private address
+            if ( filter_var($ip, FILTER_VALIDATE_IP) // a valid IP address string,  
+                 && !is_private_addr($ip) ) {        // and not a private address
 
-				$_SERVER['_NU_REMOTE_ADDR'] = $ip ;
-				return $ip ;
-			}
-		}
-	}
+                $_SERVER['_NU_REMOTE_ADDR'] = $ip ;
+                return $ip ;
+            }
+        }
+    }
 
-	// by default, always use the value of REMOTE_ADDR.
-	$ip = $_SERVER['REMOTE_ADDR'] ;
-	$_SERVER['_NU_REMOTE_ADDR'] = $ip ;
-	return $ip ;
+    // by default, always use the value of REMOTE_ADDR.
+    $ip = $_SERVER['REMOTE_ADDR'] ;
+    $_SERVER['_NU_REMOTE_ADDR'] = $ip ;
+    return $ip ;
 }
 
 /**
@@ -210,24 +210,24 @@ function get_remote_addr() {
  */
 function get_geo_country() {
 
-	$ipaddr = get_remote_addr() ; // try to get real IP address.
-	if ( empty($ipaddr) )
-		return array('code' => '', 'name' => '', 'city' => '') ;
+    $ipaddr = get_remote_addr() ; // try to get real IP address.
+    if ( empty($ipaddr) )
+        return array('code' => '', 'name' => '', 'city' => '') ;
 
-	$geo = geoip_record_by_name($ipaddr) ; // query by GeoIP.
-	if ( empty($geo) )
-		return array('code' => '', 'name' => '', 'city' => '') ;
+    $geo = geoip_record_by_name($ipaddr) ; // query by GeoIP.
+    if ( empty($geo) )
+        return array('code' => '', 'name' => '', 'city' => '') ;
 
-	$code = map_to($geo, 'country_code3') ;  // try to use country_code3 firstly.
-	if ( empty($code) )
-		$code = map_ne($geo, 'country_code', '') ; // try to user country_code.
+    $code = map_to($geo, 'country_code3') ;  // try to use country_code3 firstly.
+    if ( empty($code) )
+        $code = map_ne($geo, 'country_code', '') ; // try to user country_code.
 
-	$name = map_ne($geo, 'country_name', '') ; // display name of country.
-	$city = map_ne($geo, 'city', '') ;         // name of city.
+    $name = map_ne($geo, 'country_name', '') ; // display name of country.
+    $city = map_ne($geo, 'city', '') ;         // name of city.
 
-	return array('code' => $code, 
-	             'name' => $name, 
-	             'city' => strtolower($city)) ; // to simplify the comparasion.
+    return array('code' => $code, 
+                 'name' => $name, 
+                 'city' => strtolower($city)) ; // to simplify the comparasion.
 }
 
 ?>
