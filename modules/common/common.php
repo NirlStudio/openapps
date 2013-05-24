@@ -2,21 +2,18 @@
 /**
  * common.php
  *
- * 2013, Nirl Studio. All Rights Reserved.
+ * 2011-2013, Nirl Studio. No Rights Reserved.
  */
 
 /* All modules in nirls/openapps depend on the time value of UTC. */
-date_default_timezone_set('UTC') ;
-
-/* Try to load configurations once. */
-include_once dirname(__FILE__) . '/../config.php' ;
+date_default_timezone_set('UTC');
 
 /**
  * To convert a hex string to a byte array.
  */
 function hex_to_bytes($hexstr) {
 
-    return pack('H*', $hexstr) ;
+    return pack('H*', $hexstr);
 }
 
 /**
@@ -24,36 +21,58 @@ function hex_to_bytes($hexstr) {
  */
 function bytes_to_hex($bytes) {
 
-    $m = unpack('H*', $bytes) ;
+    $m = unpack('H*', $bytes);
     return $m[1];
 }
 
 /**
- * To test for whether an action has been executed once in current request's context.
+ * for more easily to use empty() to test for an instant value. 
+ */
+function is_empty($value) {
+    
+    return empty($value);
+}
+
+/**
+ * To test for if there is an existing session or not.
+ */
+function has_session() {
+    
+    $sessid = session_id();
+    return !empty($sessid);
+}
+function no_session() {
+    
+    $sessid = session_id();
+    return empty($sessid);
+}
+
+/**
+ * To test for whether an action has been executed once for current request.
  */
 function executed_once($action) {
 
     if ( empty($action) ) // an empty action name is not allowed,
-        return TRUE ;     // it will be taken as executed.
+        return TRUE;      // it will be taken as executed.
 
     if ( isset($_SERVER[$action]) )
-        return TRUE ; // the status is retained in $_SERVER.
+        return TRUE;      // the status is retained in $_SERVER.
 
-    // first time to be executed for the action.
-    $_SERVER[$action] = TRUE ;
-    return FALSE ;
+    // for the first time of executing the action.
+    $_SERVER[$action] = TRUE;
+    return FALSE;
 }
 
 /**
- * To get the MIME content type of a file.
+ * To get the MIME type of a file.
  */
 function file_mime_content_type($filename) {
 
-    $info = new finfo(FILEINFO_MIME) ;
+    $info = new finfo(FILEINFO_MIME);
     if (is_resource($info) === TRUE)
-        return $info->file($filename, FILEINFO_MIME_TYPE) ;
+        return $info->file($filename, FILEINFO_MIME_TYPE);
 
-    return FALSE ;
+    return FALSE;
 }
 
 /**
@@ -62,10 +81,10 @@ function file_mime_content_type($filename) {
 function safe_file_name($filename) {
 
     if (strlen($filename) > 64)
-        $filename = substr($filename, -64) ; // reserve the last 64 characters.
+        $filename = substr($filename, -64); // to reserve the last 64 characters.
 
     // replace all unsafe characters to '_'.
-    return preg_replace('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})/', '_', $filename) ;
+    return preg_replace('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})/', '_', $filename);
 }
 
 /**
@@ -76,7 +95,7 @@ function is_safe_file_name($filename) {
     if (strlen($filename) > 64)
         return FALSE;
 
-    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})', $filename) === FALSE ;
+    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._])]|[.]{2})', $filename) === FALSE;
 }
 
 /**
@@ -85,9 +104,9 @@ function is_safe_file_name($filename) {
 function is_safe_path_name($filename) {
 
     if (strlen($filename) > 256)
-        return FALSE ;
+        return FALSE;
 
-    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._/])]|[.]{2})', $filename) === FALSE ;
+    return preg_match('/([^([0-9]|[a-z]|[A-Z]|[._/])]|[.]{2})', $filename) === FALSE;
 }
 
 /**
@@ -95,8 +114,8 @@ function is_safe_path_name($filename) {
  */
 function str_starts($str, $value) {
     
-    $length = strlen($value) ;
-    return $length <= strlen($str) && (substr($str, 0, $length) === $value) ;
+    $length = strlen($value);
+    return $length <= strlen($str) && (substr($str, 0, $length) === $value);
 }
 
 /**
@@ -105,7 +124,7 @@ function str_starts($str, $value) {
 function str_ends($str, $value) {
     
     $length = strlen($value) ;
-    return $length <= strlen($str) && (substr($str, -$length) === $value) ;
+    return $length <= strlen($str) && (substr($str, -$length) === $value);
 }
 
 /**
@@ -114,12 +133,12 @@ function str_ends($str, $value) {
 function map_to($map, $key, $default=NULL) {
     
     if ( empty($map) || empty($key) )
-        return $default ; // both $map and $key must not be empty.
+        return $default; // both $map and $key must not be empty.
     
     if ( isset($map[$key]) )
-        return $map[$key] ;
+        return $map[$key];
     else
-        return $default ;
+        return $default;
 }
 
 /**
@@ -128,16 +147,16 @@ function map_to($map, $key, $default=NULL) {
 function map_ne($map, $key, $default) {
     
     if ( empty($map) || empty($key) )
-        return $default ; // both $map and $key must not be empty.
+        return $default; // both $map and $key must not be empty.
     
     if ( !isset($map[$key]) )
-        return $default ;
+        return $default;
     
-    $value = $map[$key] ;
+    $value = $map[$key];
     if ( empty($value) )
-        return $default ;
+        return $default;
     else 
-        return $value ;
+        return $value;
 }
 
 /**
@@ -145,47 +164,48 @@ function map_ne($map, $key, $default) {
  */
 function is_private_addr($ipaddr) {
 
-    $addr = inet_pton($ipaddr) ;
+    $addr = inet_pton($ipaddr);
     if ( $addr === FALSE )
-        return FALSE ; // invalid address format.
+        return FALSE; // invalid address format.
     
     $len = strlen($addr);
     if ( $len !== 4 && $len !== 16 )
-        return FALSE ; // invalid result for some unknown reasons.
+        return FALSE; // invalid result for some unknown reasons.
     
     $bytes = unpack('C*', $addr) ; // convert string to byte array.
     if ( $len === 4 ) { // IPv4
     
-        $a1 = $bytes[1] ; // it's a map not an array, so it starts from 1.
-        $a2 = $bytes[2] ;
-        return ( $a1 === 10 ) ||
+        $a1 = $bytes[1]; // it's a map not an array, so it starts from 1.
+        $a2 = $bytes[2];
+        return ( $a1 === 127 ) || ( $a1 === 10 ) ||
                ( $a1 === 172 && ($a2 > 15 && $a2 < 32) ) ||
-               ( $a1 === 192 && $a2 === 168 ) ;
+               ( $a1 === 192 && $a2 === 168 );
         
     } else { // IPv6
         
-        return ( $bytes[1] === 0xFD ) ; // FC00::/7
+        return ( $bytes[1] === 0xFD ); // FC00::/7
     }
 }
 
 /**
  * To get the real IP address of client side.
+ * Caution: it may be composed by client, so it's just for informational purpose.
  */
 function get_remote_addr() {
 
     // test for cached result
     if ( isset($_SERVER['_NU_REMOTE_ADDR']) )
-        return $_SERVER['_NU_REMOTE_ADDR'] ;
+        return $_SERVER['_NU_REMOTE_ADDR'];
 
     // possible headers containing the client ip address.
     $keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 
                   'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 
-                  'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') ;
+                  'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
 
     foreach ($keys as $key) {
 
         if ( !isset($_SERVER[$key]) )
-            continue ;
+            continue;
 
         // it may have multiple values seperated by ','.
         foreach (explode(',', $_SERVER[$key]) as $ip) {
@@ -193,41 +213,79 @@ function get_remote_addr() {
             if ( filter_var($ip, FILTER_VALIDATE_IP) // a valid IP address string,  
                  && !is_private_addr($ip) ) {        // and not a private address
 
-                $_SERVER['_NU_REMOTE_ADDR'] = $ip ;
-                return $ip ;
+                $_SERVER['_NU_REMOTE_ADDR'] = $ip;
+                return $ip;
             }
         }
     }
 
     // by default, always use the value of REMOTE_ADDR.
-    $ip = $_SERVER['REMOTE_ADDR'] ;
-    $_SERVER['_NU_REMOTE_ADDR'] = $ip ;
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $_SERVER['_NU_REMOTE_ADDR'] = $ip;
     return $ip ;
 }
 
 /**
  * To get the country code, country name and city name based on the remote address.
+ *  - geoip_record_by_name() depends on updated GeoIP data.
  */
 function get_geo_country() {
 
-    $ipaddr = get_remote_addr() ; // try to get real IP address.
-    if ( empty($ipaddr) )
-        return array('code' => '', 'name' => '', 'city' => '') ;
+    $ipaddr = get_remote_addr(); // try to get real IP address.
+    if ( empty($ipaddr) || is_private_addr($ipaddr) )
+        return array('code' => '', 'name' => '', 'city' => '');
 
-    $geo = geoip_record_by_name($ipaddr) ; // query by GeoIP.
+    $geo = geoip_record_by_name($ipaddr); // query by GeoIP.
     if ( empty($geo) )
-        return array('code' => '', 'name' => '', 'city' => '') ;
+        return array('code' => '', 'name' => '', 'city' => '');
 
-    $code = map_to($geo, 'country_code3') ;  // try to use country_code3 firstly.
+    $code = map_to($geo, 'country_code3'); // try to use country_code3 firstly.
     if ( empty($code) )
-        $code = map_ne($geo, 'country_code', '') ; // try to user country_code.
+        $code = map_ne($geo, 'country_code', ''); // try to user country_code.
 
-    $name = map_ne($geo, 'country_name', '') ; // display name of country.
-    $city = map_ne($geo, 'city', '') ;         // name of city.
+    $name = map_ne($geo, 'country_name', ''); // display name of country.
+    $city = map_ne($geo, 'city', '');         // name of city.
 
     return array('code' => $code, 
                  'name' => $name, 
-                 'city' => strtolower($city)) ; // to simplify the comparasion.
+                 'city' => $city);
+}
+
+/**
+ * To get the platform(OS) or device type based on a browscap object.
+ * 
+ *  - $browscap is returned by get_browser() which denpends on a valid browscap.ini
+ */
+function platform_of($browscap) {
+    
+    // some known device types.
+    static $devices = array(
+        'ios' => array('iPhone', 'iPad', 'iPod'),
+        'linux' => array('Ubuntu', 'Fedora', 'Debian', 'CentOS', 'Slackware')
+    );
+    
+    $platform = $browscap->platform;
+    
+    $p = strtolower($platform);
+    if ( !isset($devices[$p]) || empty($devices[$p]) )
+        return $platform;
+    
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    foreach ($devices[$p] as $value) {
+        
+        if ( strpos($ua, $value) !== FALSE )
+            return $value;
+    }
+    
+    return $platform; 
+}
+
+/**
+ * To get the browser name and version basing on a browscap object.
+ */
+function browser_of($browscap) {
+    
+    return "$browscap->browser $browscap->majorver.$browscap->minorver";
 }
 
 ?>
