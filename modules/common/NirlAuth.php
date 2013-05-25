@@ -117,11 +117,9 @@ class NirlAuthDigest {
         // detect suspicious action.
         NirlShield::guardIP();
         
-        if ( has_session() && isset($_SESSION['NAD:UID']) ) {
-
+        if ( has_session() && isset($_SESSION['NAD:UID']) )
             unset($_SESSION['NAD:UID']); // clear session.
-            self::refreshCredCookie(0);  // clear cookie.
-        }
+        self::refreshCredCookie(0);  // clear cookie.
     }
 
     /**
