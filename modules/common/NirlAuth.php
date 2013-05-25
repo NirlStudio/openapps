@@ -454,7 +454,7 @@ class NirlAuthDigest {
             return 0;
 
         $time = intval(substr($txt, 3, $pos - 3));
-        if ($time > time())
+        if ($time < time())
             return 0;
 
         $pos += 1;
