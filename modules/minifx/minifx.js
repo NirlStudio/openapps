@@ -269,7 +269,7 @@
             if ( $minifx._pending.length > 0 ) {
                 
                 var req = $minifx._pending[0];
-                $minifx.fail(status, req.svc, req.action, req.data); 
+                $minifx.fail(xhr.status, req.svc, req.action, req.data); 
             }
             
         }) // returns the XHR object

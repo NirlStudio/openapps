@@ -82,7 +82,8 @@ class NirlAuthDigest {
 
         NirlShield::guardIP();
         NirlSession::manage();
-        
+       
+        $_SERVER['NAD:WEB'] = TRUE; 
         $_SESSION['NAD:WEB'] = TRUE;
         setcookie('_NADWL', '1', time()+3600*24*30);
     }
@@ -250,15 +251,22 @@ class NirlAuthDigest {
     private static function challenge() {
 
         // for a web application, developer can provide a customized login page.
-        if ( isset($_SESSION['NAD:WEB']) || isset($_COOKIE['_NADWL']) ) {
+        if ( isset($_SERVER['NAD:WEB']) ) {
             
             // to challenge client by a customized login page.
             $url = self::$web_login;
-            if ( !empty($url) ) { // it's required.
-                
-                header("Location: $url");
-                die();
-            }
+            if ( empty($url) )
+                $url = '/?_rd=1' ;
+            
+            header("Location: $url");
+            die();
+        }
+        
+        // it may be accessing by a ajax request.
+        if ( isset($_SESSION['NAD:WEB']) || isset($_COOKIE['_NADWL']) ) {
+
+            header('HTTP/1.1 401 Access Denied');
+            die();
         }
         
         // to use the time stamp as the opaque value, to validate later.
